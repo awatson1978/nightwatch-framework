@@ -1,7 +1,7 @@
 Package.describe({
   summary: "XML parser and framework launcher for Nightwatch/Selenium.",
   version: "1.0.0",
-  git: "http://github.com/meteor-velocity/nightwatch-integration.git"
+  git: "http://github.com/meteor-velocity/nightwatch-framework.git"
 });
 
 Npm.depends({
@@ -25,6 +25,6 @@ Package.onUse(function(api) {
 
 Package.onTest(function(api) {
   api.use('tinytest');
-  api.use('velocity:nightwatch-integration');
-  api.addFiles('velocity:nightwatch-integration-tests.js');
+  api.use('velocity:nightwatch-framework');
+  api.addFiles('velocity:nightwatch-framework-tests.js');
 });
