@@ -39,7 +39,10 @@
 
   if (Velocity && Velocity.registerTestingFramework){
     console.log("Registering Nightwatch with Velocity...");
-    Velocity.registerTestingFramework("nightwatch", {regex: /nightwatch/});
+    Velocity.registerTestingFramework("nightwatch", {
+      disableAutoReset: true,
+      regex: /nightwatch/
+      });
     //Velocity.parseXmlFiles("nightwatch");
 
     //Meteor.call('registerTestFramework', "nightwatch");
