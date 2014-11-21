@@ -1,3 +1,5 @@
+Velocity = {};
+
 (function () {
 
   "use strict";
