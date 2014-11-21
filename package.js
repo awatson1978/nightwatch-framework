@@ -1,6 +1,6 @@
 Package.describe({
   summary: "Framework launcher and XML output parser for Nightwatch/Selenium.",
-  version: "0.2.1",
+  version: "0.2.2",
   name: "velocity:nightwatch-framework",
   git: "http://github.com/meteor-velocity/nightwatch-framework.git"
 });
@@ -17,7 +17,7 @@ Package.onUse(function(api) {
 
   api.use(['underscore']);
   api.use(['livedata']);
-  api.use(['velocity:core']);
+  //api.use(['velocity:core']);
   api.use(['clinical:nightwatch']);
 
   api.addFiles('nightwatch.integration.js');
