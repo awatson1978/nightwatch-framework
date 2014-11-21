@@ -17,8 +17,8 @@ Package.onUse(function(api) {
 
   api.use(['underscore']);
   api.use(['livedata']);
-  //api.use(['velocity:core']);
-  api.use(['clinical:nightwatch']);
+  api.use(['velocity:core@0.3.0']);
+  api.use(['clinical:nightwatch@1.4.0']);
 
   api.addFiles('nightwatch.integration.js');
 });

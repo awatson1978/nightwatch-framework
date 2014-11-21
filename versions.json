@@ -1,15 +1,7 @@
 {
   "dependencies": [
     [
-      "application-configuration",
-      "1.0.3"
-    ],
-    [
       "base64",
-      "1.0.1"
-    ],
-    [
-      "binary-heap",
       "1.0.1"
     ],
     [
@@ -33,16 +25,8 @@
       "1.0.4"
     ],
     [
-      "follower-livedata",
-      "1.0.2"
-    ],
-    [
       "geojson-utils",
       "1.0.1"
-    ],
-    [
-      "http",
-      "1.0.4"
     ],
     [
       "id-map",
@@ -69,10 +53,6 @@
       "1.0.4"
     ],
     [
-      "mongo",
-      "1.0.7"
-    ],
-    [
       "ordered-dict",
       "1.0.1"
     ],
@@ -91,10 +71,6 @@
     [
       "underscore",
       "1.0.1"
-    ],
-    [
-      "velocity:core",
-      "0.2.14"
     ]
   ],
   "pluginDependencies": [],
