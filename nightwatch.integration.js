@@ -53,8 +53,21 @@
   Meteor.methods({
     'nightwatch/parse/xml':function(){
       console.log("Parsing Nightwatch XML report files...");
+
+      // we need a different to our paths depending on whether we are developing locally
+      // or have pulled the framework from atmosphere
+      console.log('process.env.PWD', process.env.PWD);
+      if(process.env.PWD.indexOf('/packages/nightwatch-framework')){
+        testReportsPath = process.env.PWD + '/../../tests/.reports/nightwatch-acceptance'
+      }else{
+        testReportsPath = process.env.PWD + '/tests/.reports/nightwatch-acceptance';
+      }
+      console.log('testReportsPath', testReportsPath);
+
+
       //parseXmlFiles("nightwatch");
       var selectedFramework = "nightwatch";
+      var result = "Initialized; but no files parsed.";
 
       // if (Velocity && Velocity.registerTestingFramework){
       //   console.log("Registering Nightwatch with Velocity...");
@@ -81,6 +94,8 @@
       var newResults = [];
       //var globSearchString = parsePath('**/FIREFOX*.xml');
       var globSearchString = path.join('**', 'FIREFOX_*.xml');
+      console.log('globSearchString', globSearchString);
+
       var xmlFiles = glob.sync(globSearchString, { cwd: testReportsPath });
 
       //console.log('globSearchString', globSearchString);
@@ -120,10 +135,9 @@
           Meteor.call('velocity/reports/reset', {framework: selectedFramework, notIn: newResults});
           //Meteor.call('completed', {framework: selectedFramework});
         }
+        result = "Parsed " + index + " XML files.";
       });
-      //});
-      //}
-      
+      return result;
     }
   });
 
