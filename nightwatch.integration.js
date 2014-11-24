@@ -57,7 +57,7 @@
       // we need a different to our paths depending on whether we are developing locally
       // or have pulled the framework from atmosphere
       console.log('process.env.PWD', process.env.PWD);
-      if(process.env.PWD.indexOf('/packages/nightwatch-framework')){
+      if(process.env.PWD.indexOf('/packages/nightwatch-framework') > -1){
         testReportsPath = process.env.PWD + '/../../tests/.reports/nightwatch-acceptance'
       }else{
         testReportsPath = process.env.PWD + '/tests/.reports/nightwatch-acceptance';
