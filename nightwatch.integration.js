@@ -1,4 +1,4 @@
-Velocity = {};
+
 
 (function () {
 
@@ -39,71 +39,95 @@ Velocity = {};
 
   console.log("Starting Nightwatch...");
 
-  if (Velocity && Velocity.registerTestingFramework){
-    console.log("Registering Nightwatch with Velocity...");
-    Velocity.registerTestingFramework("nightwatch", {
-      disableAutoReset: true,
-      regex: /nightwatch/
-      });
-    //Velocity.parseXmlFiles("nightwatch");
+  Meteor.call('velocity/register/framework', "nightwatch", {
+    disableAutoReset: true,
+    regex: /nightwatch/
+  });
 
-    //Meteor.call('registerTestFramework', "nightwatch");
 
-    console.log("Parsing Nightwatch XML report files...");
-    parseXmlFiles("nightwatch");
-
-  }
 
   //////////////////////////////////////////////////////////////////////
-  // Methods
+  // Meteor Methods
+  //
 
-      function parseXmlFiles (selectedFramework){
-         //var closeFunc = Meteor.bindEnvironment(function () {
-           console.log('binding environment and parsing Nightwatch FIREFOX xml files...')
+  Meteor.methods({
+    'nightwatch/parse/xml':function(){
+      console.log("Parsing Nightwatch XML report files...");
+      //parseXmlFiles("nightwatch");
+      var selectedFramework = "nightwatch";
 
-           var newResults = [];
-           //var globSearchString = parsePath('**/FIREFOX*.xml');
-           var globSearchString = path.join('**', 'FIREFOX_*.xml');
-           var xmlFiles = glob.sync(globSearchString, { cwd: testReportsPath });
+      // if (Velocity && Velocity.registerTestingFramework){
+      //   console.log("Registering Nightwatch with Velocity...");
+      //   Velocity.registerTestingFramework("nightwatch", {
+      //     disableAutoReset: true,
+      //     regex: /nightwatch/
+      //     });
+      //   //Velocity.parseXmlFiles("nightwatch");
+      //
+      //   //Meteor.call('registerTestFramework', "nightwatch");
+      //
+      //   console.log("Parsing Nightwatch XML report files...");
+      //   parseXmlFiles("nightwatch");
+      //
+      // }
 
-           //console.log('globSearchString', globSearchString);
-           //console.log('xmlFiles', xmlFiles);
+      //////////////////////////////////////////////////////////////////////
+      // Methods
 
-           _.each(xmlFiles, function (xmlFile, index) {
-             parseString(fs.readFileSync(testReportsPath + path.sep + xmlFile), function (err, result) {
-               _.each(result.testsuites.testsuite, function (testsuite) {
-                 _.each(testsuite.testcase, function (testcase) {
-                   var result = {
-                     name: testcase.$.name,
-                     framework: selectedFramework,
-                     result: testcase.failure ? 'failed' : 'passed',
-                     timestamp: new Date(),
-                     time: moment().format("HH:MM:SS"),
-                     ancestors: ["nightwatch"]
-                   };
+      //parseXmlFiles = function(selectedFramework){
+      //var closeFunc = Meteor.bindEnvironment(function () {
+      console.log('binding environment and parsing Nightwatch FIREFOX xml files...')
 
-                   if (testcase.failure) {
-                     testcase.failure.forEach(function (failure) {
-                       result.failureType = failure.$.type;
-                       result.failureMessage = failure.$.message;
-                       result.failureStackTrace = failure._;
-                     });
-                   }
-                   result.id = selectedFramework + ':' + hashCode(xmlFile + testcase.$.classname + testcase.$.name);
-                   newResults.push(result.id);
-                   //console.log('result', result);
-                   Meteor.call('postResult', result);
-                 });
-               });
-             });
+      var newResults = [];
+      //var globSearchString = parsePath('**/FIREFOX*.xml');
+      var globSearchString = path.join('**', 'FIREFOX_*.xml');
+      var xmlFiles = glob.sync(globSearchString, { cwd: testReportsPath });
 
-             if (index === xmlFiles.length - 1) {
-               Meteor.call('resetReports', {framework: selectedFramework, notIn: newResults});
-               Meteor.call('completed', {framework: selectedFramework});
-             }
-           });
-         //});
-      }
+      //console.log('globSearchString', globSearchString);
+      //console.log('xmlFiles', xmlFiles);
+
+      _.each(xmlFiles, function (xmlFile, index) {
+        parseString(fs.readFileSync(testReportsPath + path.sep + xmlFile), function (err, result) {
+          _.each(result.testsuites.testsuite, function (testsuite) {
+            _.each(testsuite.testcase, function (testcase) {
+              var result = {
+                name: testcase.$.name,
+                framework: selectedFramework,
+                result: testcase.failure ? 'failed' : 'passed',
+                timestamp: new Date(),
+                time: moment().format("HH:MM:SS"),
+                ancestors: ["nightwatch"]
+              };
+
+              if (testcase.failure) {
+                testcase.failure.forEach(function (failure) {
+                  result.failureType = failure.$.type;
+                  result.failureMessage = failure.$.message;
+                  result.failureStackTrace = failure._;
+                });
+              }
+              result.id = selectedFramework + ':' + hashCode(xmlFile + testcase.$.classname + testcase.$.name);
+              newResults.push(result.id);
+              //console.log('result', result);
+              //  Meteor.call('postResult', result);
+              Meteor.call('velocity/reports/submit', result);
+            });
+          });
+        });
+
+        if (index === xmlFiles.length - 1) {
+          //  Meteor.call('resetReports', {framework: selectedFramework, notIn: newResults});
+          Meteor.call('velocity/reports/reset', {framework: selectedFramework, notIn: newResults});
+          //Meteor.call('completed', {framework: selectedFramework});
+        }
+      });
+      //});
+      //}
+      
+    }
+  });
+
+
 
 
   //////////////////////////////////////////////////////////////////////
