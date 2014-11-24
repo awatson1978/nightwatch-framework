@@ -14,8 +14,6 @@
       path = Npm.require('path'),
       rimraf = Npm.require('rimraf'),
       sys = Npm.require('sys'),
-      //testReportsPath = path.join(pwd, 'tests', '.reports', 'jasmine-unit'),
-      //testReportsPath = path.join(pwd, 'tests', '.reports', 'nightwatch-acceptance'),
       testReportsPath = parsePath(pwd + '/tests/.reports/nightwatch-acceptance'),
       args = [],
       consoleData = '',
@@ -32,13 +30,7 @@
     }
   };
 
-
-  //nightwatchCli = parsePath(pwd + '/packages/selenium-nightwatch/launch_nightwatch_from_velocity.sh');
-
-  //child_process.exec(nightwatchCli, SystemWrapper.standardOut);
-
   console.log("Starting Nightwatch...");
-
   Meteor.call('velocity/register/framework', "nightwatch", {
     disableAutoReset: true,
     regex: /nightwatch/
@@ -53,6 +45,7 @@
   Meteor.methods({
     'nightwatch/parse/xml':function(){
       console.log("Parsing Nightwatch XML report files...");
+      var selectedFramework = "nightwatch";
 
       // we need a different to our paths depending on whether we are developing locally
       // or have pulled the framework from atmosphere
@@ -65,37 +58,9 @@
       console.log('testReportsPath', testReportsPath);
 
 
-      //parseXmlFiles("nightwatch");
-      var selectedFramework = "nightwatch";
-      var result = "Initialized; but no files parsed.";
-
-      // if (Velocity && Velocity.registerTestingFramework){
-      //   console.log("Registering Nightwatch with Velocity...");
-      //   Velocity.registerTestingFramework("nightwatch", {
-      //     disableAutoReset: true,
-      //     regex: /nightwatch/
-      //     });
-      //   //Velocity.parseXmlFiles("nightwatch");
-      //
-      //   //Meteor.call('registerTestFramework', "nightwatch");
-      //
-      //   console.log("Parsing Nightwatch XML report files...");
-      //   parseXmlFiles("nightwatch");
-      //
-      // }
-
-      //////////////////////////////////////////////////////////////////////
-      // Methods
-
-      //parseXmlFiles = function(selectedFramework){
-      //var closeFunc = Meteor.bindEnvironment(function () {
-      console.log('binding environment and parsing Nightwatch FIREFOX xml files...')
-
+      console.log('Parsing Nightwatch FIREFOX xml files...')
       var newResults = [];
-      //var globSearchString = parsePath('**/FIREFOX*.xml');
       var globSearchString = path.join('**', 'FIREFOX_*.xml');
-      console.log('globSearchString', globSearchString);
-
       var xmlFiles = glob.sync(globSearchString, { cwd: testReportsPath });
 
       //console.log('globSearchString', globSearchString);
@@ -123,17 +88,14 @@
               }
               result.id = selectedFramework + ':' + hashCode(xmlFile + testcase.$.classname + testcase.$.name);
               newResults.push(result.id);
-              //console.log('result', result);
-              //  Meteor.call('postResult', result);
+
               Meteor.call('velocity/reports/submit', result);
             });
           });
         });
 
         if (index === xmlFiles.length - 1) {
-          //  Meteor.call('resetReports', {framework: selectedFramework, notIn: newResults});
           Meteor.call('velocity/reports/reset', {framework: selectedFramework, notIn: newResults});
-          //Meteor.call('completed', {framework: selectedFramework});
         }
         result = "Parsed " + index + " XML files.";
       });
