@@ -22,7 +22,6 @@
       rerunTests,
       RUN_TEST_THROTTLE_TIME = 100;
 
-
   var SystemWrapper = {
     standardOut: function(error, stdout, stderr) {
       var sys = Npm.require('sys');
@@ -30,7 +29,7 @@
     }
   };
 
-  console.log("Starting Nightwatch...");
+  console.log("Lets register Nightwatch with Velocity...");
   Meteor.call('velocity/register/framework', "nightwatch", {
     disableAutoReset: true,
     regex: /nightwatch/
@@ -43,6 +42,26 @@
   //
 
   Meteor.methods({
+    'nightwatch/run':function(){
+      console.log("Server received request to run Nightwatch script...");
+
+      // Npm.require('child_process').exec("pwd", function(error, result){
+      // Npm.require('child_process').exec("pwd .", function(error, result){
+      //   var sys = Npm.require('sys');
+      //   sys.puts(result);
+      // });
+
+      console.log("Installing Nightwatch bridge via Npm...");
+      Npm.require('child_process').exec("npm install nightwatch@0.5.35", function(error, result){
+        Npm.require('sys').puts(result);
+
+        console.log("Launching Nightwatch with JSON configuration file...");
+        Npm.require('child_process').exec("sudo ./node_modules/nightwatch/bin/nightwatch -c ./assets/packages/clinical_nightwatch/nightwatch_from_velocity.json", function(error, result){
+          Npm.require('sys').puts(result);
+        });
+      });
+
+    },
     'nightwatch/parse/xml':function(){
       console.log("Parsing Nightwatch XML report files...");
       var selectedFramework = "nightwatch";
