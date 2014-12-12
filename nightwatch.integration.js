@@ -50,16 +50,23 @@
       //   var sys = Npm.require('sys');
       //   sys.puts(result);
       // });
+      var nightwatchProcess = null;
 
       console.log("Installing Nightwatch bridge via Npm...");
-      Npm.require('child_process').exec("npm install nightwatch@0.5.3", function(error, result){
+      Npm.require('child_process').exec("npm install nightwatch@0.5.3", Meteor.bindEnvironment(function(error, result){
         Npm.require('sys').puts(result);
 
         console.log("Launching Nightwatch with JSON configuration file...");
-        Npm.require('child_process').exec("sudo ./node_modules/nightwatch/bin/nightwatch -c ./assets/packages/clinical_nightwatch/nightwatch_from_velocity.json", function(error, result){
-          Npm.require('sys').puts(result);
-        });
-      });
+        nightwatchProcess = Npm.require('child_process').exec("sudo ./node_modules/nightwatch/bin/nightwatch -c ./assets/packages/clinical_nightwatch/nightwatch_from_velocity.json", Meteor.bindEnvironment(function(error, stdout){
+          Npm.require('sys').puts(stdout);
+          console.log('Nightwatch exited.');
+          Meteor.call('nightwatch/parse/xml');
+        }));
+
+        // nightwatchProcess.on('exit', function(code){
+        // })
+      }));
+
 
     },
     'nightwatch/parse/xml':function(){
@@ -84,6 +91,9 @@
 
       //console.log('globSearchString', globSearchString);
       //console.log('xmlFiles', xmlFiles);
+
+      var returnMessage = "Parsing hasnt happened.";
+
 
       _.each(xmlFiles, function (xmlFile, index) {
         parseString(fs.readFileSync(testReportsPath + path.sep + xmlFile), function (err, result) {
@@ -116,9 +126,9 @@
         if (index === xmlFiles.length - 1) {
           Meteor.call('velocity/reports/reset', {framework: selectedFramework, notIn: newResults});
         }
-        result = "Parsed " + index + " XML files.";
+        returnMessage = "Parsed " + index + " XML files.";
       });
-      return result;
+      return returnMessage;
     }
   });
 
