@@ -52,7 +52,7 @@
       // });
 
       console.log("Installing Nightwatch bridge via Npm...");
-      Npm.require('child_process').exec("npm install nightwatch@0.5.35", function(error, result){
+      Npm.require('child_process').exec("npm install nightwatch@0.5.3", function(error, result){
         Npm.require('sys').puts(result);
 
         console.log("Launching Nightwatch with JSON configuration file...");
