@@ -45,15 +45,10 @@
     'nightwatch/run':function(){
       console.log("Server received request to run Nightwatch script...");
 
-      // Npm.require('child_process').exec("pwd", function(error, result){
-      // Npm.require('child_process').exec("pwd .", function(error, result){
-      //   var sys = Npm.require('sys');
-      //   sys.puts(result);
-      // });
       var nightwatchProcess = null;
 
       console.log("Installing Nightwatch bridge via Npm...");
-      Npm.require('child_process').exec("npm install nightwatch@0.5.3", Meteor.bindEnvironment(function(error, result){
+      Npm.require('child_process').exec("npm install nightwatch@0.5.36", Meteor.bindEnvironment(function(error, result){
         Npm.require('sys').puts(result);
 
         console.log("Launching Nightwatch with JSON configuration file...");
@@ -62,15 +57,12 @@
           console.log('Nightwatch exited.');
           Meteor.call('nightwatch/parse/xml');
         }));
-
-        // nightwatchProcess.on('exit', function(code){
-        // })
       }));
 
 
     },
     'nightwatch/parse/xml':function(){
-      console.log("Parsing Nightwatch XML report files...");
+      console.log("Running nightwatch/parse/xml...");
       var selectedFramework = "nightwatch";
 
       // we need a different to our paths depending on whether we are developing locally
@@ -84,7 +76,7 @@
       console.log('testReportsPath', testReportsPath);
 
 
-      console.log('Parsing Nightwatch FIREFOX xml files...')
+      console.log('Parsing FIREFOX xml files...')
       var newResults = [];
       var globSearchString = path.join('**', 'FIREFOX_*.xml');
       var xmlFiles = glob.sync(globSearchString, { cwd: testReportsPath });

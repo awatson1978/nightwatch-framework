@@ -5,12 +5,14 @@ Package.describe({
   git: "http://github.com/meteor-velocity/nightwatch-framework.git"
 });
 
+
 Npm.depends({
     'glob': '3.2.9',
     'lodash': '2.4.1',
     'rimraf': '2.2.8',
     'xml2js': '0.4.2'
 });
+
 
 Package.onUse(function(api) {
   api.versionsFrom('METEOR@1.0');
@@ -23,11 +25,12 @@ Package.onUse(function(api) {
   api.use('underscore');
   api.use('livedata');
   api.use('mrt:moment@2.8.1');
-  api.use('velocity:core@0.3.1');
-  api.use('clinical:nightwatch@1.5.0');
+  api.use('velocity:core@0.4.5');
+  api.use('clinical:nightwatch@1.5.1');
 
   api.addFiles('nightwatch.integration.js', 'server');
 });
+
 
 Package.onTest(function(api) {
   api.use('tinytest');
