@@ -13,6 +13,7 @@ c) keeping velocity dependencies out of Nightwatch, so it can run stand-alone
 
 ````sh
 meteor add velocity:nightwatch-framework  
+meteor add velocity:html-reporter    
 ````
 
 ===============================
