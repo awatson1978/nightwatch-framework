@@ -8,6 +8,8 @@ b) launching the clinical:nightwatch bridge to the Selenium server
 c) keeping velocity dependencies out of Nightwatch, so it can run stand-alone  
 
 
+![Prezi](http://prezi.com/muvofev3r0n0/?utm_campaign=share&utm_medium=copy&rc=ex0share)  
+
 ===============================
 #### Installation  
 
