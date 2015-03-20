@@ -14,7 +14,7 @@
       path = Npm.require('path'),
       rimraf = Npm.require('rimraf'),
       sys = Npm.require('sys'),
-      testReportsPath = parsePath(pwd + '/tests/.reports/nightwatch-acceptance'),
+      testReportsPath = _parsePath(pwd + '/tests/.reports/nightwatch-acceptance'),
       args = [],
       consoleData = '',
       nightwatchCli,
@@ -22,14 +22,8 @@
       rerunTests,
       RUN_TEST_THROTTLE_TIME = 100;
 
-  var SystemWrapper = {
-    standardOut: function(error, stdout, stderr) {
-      var sys = Npm.require('sys');
-      sys.puts(stdout);
-    }
-  };
 
-  console.log("Lets register Nightwatch with Velocity...");
+  console.log("[nightwatch-framework] Lets register Nightwatch with Velocity...");
   Meteor.call('velocity/register/framework', "nightwatch", {
     disableAutoReset: true,
     regex: /nightwatch/
@@ -43,46 +37,75 @@
 
   Meteor.methods({
     'nightwatch/run':function(){
-      console.log("Server received request to run Nightwatch script...");
+      console.log("[nightwatch-framework] Server received request to run Nightwatch script...");
 
-      var nightwatchProcess = null;
 
-      console.log("Installing Nightwatch bridge via Npm...");
+      console.log("[nightwatch-framework] Installing Nightwatch bridge via Npm...");
       Npm.require('child_process').exec("npm install nightwatch@0.5.36", Meteor.bindEnvironment(function(error, result){
         Npm.require('sys').puts(result);
 
-        console.log("Launching Nightwatch with JSON configuration file...");
-        nightwatchProcess = Npm.require('child_process').exec("sudo ./node_modules/nightwatch/bin/nightwatch -c ./assets/packages/clinical_nightwatch/nightwatch_from_velocity.json", Meteor.bindEnvironment(function(error, stdout){
-          Npm.require('sys').puts(stdout);
-          console.log('Nightwatch exited.');
-          Meteor.call('nightwatch/parse/xml');
-        }));
+        var spawn = Npm.require('child_process').spawn;
+        var nightwatch = spawn('./node_modules/nightwatch/bin/nightwatch', ['-c', './assets/packages/clinical_nightwatch/nightwatch_from_velocity.json']);
+
+        nightwatch.stdout.on('data', function(data){
+          // data is in hex, and has a line break at the end
+          console.log(('' + data).slice(0, -1));
+        });
+        nightwatch.on('close', function(code){
+          if(code === 1){
+            console.log('Finished!  Nightwatch ran all the tests!');
+            process.exit();
+          }
+          if(code != 1){
+            console.log('Uh oh!  Something went awry.  Nightwatch exited with a code of ' + code);
+          }
+        });
+
       }));
 
-
     },
-    'nightwatch/parse/xml':function(){
-      console.log("Running nightwatch/parse/xml...");
-      var selectedFramework = "nightwatch";
+    'nightwatch/clear/xml':function(){
+      console.log("[nightwatch-framework] Running nightwatch/clear/xml...");
+      console.log('[nightwatch-framework] Deleting FIREFOX xml files...')
 
-      // we need a different to our paths depending on whether we are developing locally
-      // or have pulled the framework from atmosphere
-      console.log('process.env.PWD', process.env.PWD);
       if(process.env.PWD.indexOf('/packages/nightwatch-framework') > -1){
         testReportsPath = process.env.PWD + '/../../tests/.reports/nightwatch-acceptance'
       }else{
         testReportsPath = process.env.PWD + '/tests/.reports/nightwatch-acceptance';
       }
-      console.log('testReportsPath', testReportsPath);
+      console.log('[nightwatch-framework] testReportsPath', testReportsPath);
+
+      var globSearchString = path.join('**', 'FIREFOX_*.xml');
+      var xmlFiles = glob.sync(globSearchString, { cwd: testReportsPath });
+
+      _.each(xmlFiles, function (xmlFile, index) {
+        fs.unlinkSync(testReportsPath + path.sep + xmlFile);
+      });
+
+      console.log("[nightwatch-framework] All XML files should be deleted...");
+    },
+    'nightwatch/parse/xml':function(){
+      console.log("[nightwatch-framework] Running nightwatch/parse/xml...");
+      var selectedFramework = "nightwatch";
+
+      // we need a different to our paths depending on whether we are developing locally
+      // or have pulled the framework from atmosphere
+      console.log('[nightwatch-framework] process.env.PWD', process.env.PWD);
+      if(process.env.PWD.indexOf('/packages/nightwatch-framework') > -1){
+        testReportsPath = process.env.PWD + '/../../tests/.reports/nightwatch-acceptance'
+      }else{
+        testReportsPath = process.env.PWD + '/tests/.reports/nightwatch-acceptance';
+      }
+      console.log('[nightwatch-framework] testReportsPath', testReportsPath);
 
 
-      console.log('Parsing FIREFOX xml files...')
+      console.log('[nightwatch-framework] Parsing FIREFOX xml files...')
       var newResults = [];
       var globSearchString = path.join('**', 'FIREFOX_*.xml');
       var xmlFiles = glob.sync(globSearchString, { cwd: testReportsPath });
 
-      //console.log('globSearchString', globSearchString);
-      //console.log('xmlFiles', xmlFiles);
+      //console.log('[nightwatch-framework] globSearchString', globSearchString);
+      //console.log('[nightwatch-framework] xmlFiles', xmlFiles);
 
       var returnMessage = "Parsing hasnt happened.";
 
@@ -107,7 +130,7 @@
                   result.failureStackTrace = failure._;
                 });
               }
-              result.id = selectedFramework + ':' + hashCode(xmlFile + testcase.$.classname + testcase.$.name);
+              result.id = selectedFramework + ':' + _hashCode(xmlFile + testcase.$.classname + testcase.$.name);
               newResults.push(result.id);
 
               Meteor.call('velocity/reports/submit', result);
@@ -130,14 +153,14 @@
   //////////////////////////////////////////////////////////////////////
   // private functions
 
-  function hashCode (s) {
+  function _hashCode (s) {
     return s.split("").reduce(function (a, b) {
       a = ((a << 5) - a) + b.charCodeAt(0);
       return a & a;
     }, 0);
   }
 
-  function parsePath (unixPath) {
+  function _parsePath (unixPath) {
     return unixPath.replace('\/', path.sep);
   }
 
