@@ -64,7 +64,7 @@
       }));
 
     },
-    'nightwatch/clear/xml':function(){
+    'nightwatch/reset':function(){
       console.log("[nightwatch-framework] Running nightwatch/clear/xml...");
       console.log('[nightwatch-framework] Deleting FIREFOX xml files...')
 
