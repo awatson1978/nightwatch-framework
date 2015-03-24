@@ -29,6 +29,26 @@ Package.onUse(function(api) {
   api.use('clinical:nightwatch@2.0.1');
 
   api.addFiles('nightwatch.integration.js', 'server');
+
+  api.addFiles([
+    'sample-tests/nightwatch/globals.json',
+    'sample-tests/nightwatch/assertions/foo.js',
+    'sample-tests/nightwatch/commands/consoleLog.js',
+    'sample-tests/nightwatch/commands/sectionBreak.js',
+    'sample-tests/nightwatch/commands/signIn.js',
+    'sample-tests/nightwatch/commands/selectFromSidebar.js',
+    'sample-tests/nightwatch/commands/signOut.js',
+    'sample-tests/nightwatch/commands/signUp.js',
+    'sample-tests/nightwatch/commands/waitForPage.js',
+    'sample-tests/nightwatch/commands/methods/meteorApply.js',
+    'sample-tests/nightwatch/commands/components/reviewMainLayout.js',
+    'sample-tests/nightwatch/commands/components/reviewSidebar.js',
+    'sample-tests/nightwatch/commands/components/reviewSignInPage.js',
+    'sample-tests/nightwatch/commands/components/reviewSignUpPage.js',
+    'sample-tests/nightwatch/walkthroughs/app.layout.js',
+    'sample-tests/nightwatch/walkthroughs/itunes.connect.js',
+    'sample-tests/nightwatch/logs/selenium-debug.log'
+  ], 'server', {isAsset: true})
 });
 
 
