@@ -3,7 +3,7 @@
 
 module.exports = {
   tags: ["itunes", "publish", "marketing", "signIn"],
-  "iTunesConnect Publication" : function (client) {
+  "iTunesConnect" : function (client) {
     client
       .resizeWindow(1024, 768)
 

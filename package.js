@@ -2,7 +2,8 @@ Package.describe({
   summary: "Framework launcher and XML output parser for Nightwatch/Selenium.",
   version: "0.4.1",
   name: "velocity:nightwatch-framework",
-  git: "http://github.com/meteor-velocity/nightwatch-framework.git"
+  git: "http://github.com/meteor-velocity/nightwatch-framework.git",
+  debugOnly: true
 });
 
 
