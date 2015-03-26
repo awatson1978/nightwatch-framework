@@ -70,8 +70,8 @@
           contents: Assets.getText('sample-tests/nightwatch/commands/waitForPage.js')
         },
         {
-          path: 'nightwatch/commands/methods/bar.js',
-          contents: Assets.getText('sample-tests/nightwatch/commands/methods/bar.js')
+          path: 'nightwatch/commands/methods/meteorApply.js',
+          contents: Assets.getText('sample-tests/nightwatch/commands/methods/meteorApply.js')
         },
         {
           path: 'nightwatch/commands/components/reviewMainLayout.js',
