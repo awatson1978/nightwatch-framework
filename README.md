@@ -1,7 +1,7 @@
 nightwatch-framework  
 ====================================
 
-This package provides Nightwatch integration with Velocity and Meteor.  It's primary responsibilities include:
+This package provides Nightwatch integration with Velocity and Meteor.  It's recommended to also use [velocity:nightwatch-reporter](https://github.com/meteor-velocity/nightwatch-reporter) package.  The primary responsibilities of this package include:
 
 a) integrating the clinical:nightwatch package which provides Selenium  
 b) installing nightwatch  
