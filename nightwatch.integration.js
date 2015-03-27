@@ -117,10 +117,18 @@
 
       console.log("[nightwatch-framework] Installing Nightwatch bridge via Npm...");
       Npm.require('child_process').exec("npm install nightwatch@0.5.36", Meteor.bindEnvironment(function(error, result){
+        if(error){
+          console.log("[nightwatch-framework] ERROR in executing installation: ", error);
+        }
+
         Npm.require('sys').puts(result);
 
         var spawn = Npm.require('child_process').spawn;
-        var nightwatch = spawn('./node_modules/nightwatch/bin/nightwatch', ['-c', './assets/packages/clinical_nightwatch/nightwatch_from_velocity_console.json']);
+        var nightwatch = spawn('./node_modules/nightwatch/bin/nightwatch', ['-c', './assets/packages/clinical_nightwatch/nightwatch_from_velocity_console.json'], function(error, result){
+          if(error){
+            console.log("[nightwatch-framework] ERROR spawning nightwatch: ", error);
+          }
+        });
 
 
         nightwatch.stdout.on('data', Meteor.bindEnvironment(function(data){
