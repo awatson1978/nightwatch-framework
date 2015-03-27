@@ -3,14 +3,17 @@ nightwatch-framework
 
 This package provides Nightwatch integration with Velocity and Meteor.  It's primary responsibilities include:
 
-a) integrating the clinical:nightwatch package which provides Selenium
-b) installing nightwatch
+a) integrating the clinical:nightwatch package which provides Selenium  
+b) installing nightwatch  
 c) parsing XML output files produced by Nightwatch  
 d) launching the clinical:nightwatch bridge to the Selenium server  
 e) keeping velocity dependencies out of Nightwatch, so it can run stand-alone  
-f) integrating with the `meteor --test`` command
-g) providing Travis CI integration
+f) integrating with the `meteor --test`` command  
+g) providing Travis CI integration  
 
+
+===============================
+#### Architecture  
 There's a Prezi  which shows all the modules involved that's a little out of date:
 
 ![Prezi](https://raw.githubusercontent.com/meteor-velocity/nightwatch-framework/master/nightwatch.prezi.png)
