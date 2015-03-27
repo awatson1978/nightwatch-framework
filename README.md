@@ -38,6 +38,9 @@ Simply add the package to your application.  It will load everything else in.
 
 ````sh
 meteor add velocity:nightwatch-framework  
+
+# you may also want to use the Nightwatch HTML Reporter
+meteor add velocity:nightwatch-reporter
 ````
 
 ===============================
