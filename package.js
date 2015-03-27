@@ -11,7 +11,8 @@ Npm.depends({
     'glob': '3.2.9',
     'lodash': '2.4.1',
     'rimraf': '2.2.8',
-    'xml2js': '0.4.2'
+    'xml2js': '0.4.2',
+    'nightwatch': '0.5.36'
 });
 
 
