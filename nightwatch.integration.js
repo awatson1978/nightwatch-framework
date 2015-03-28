@@ -144,24 +144,13 @@
 
         }));
         nightwatch.on('close', function(nightwatchExitCode){
-          if(nightwatchExitCode === 1){
-            console.log('Finished!  Nightwatch ran all the tests and exited with ' + nightwatchExitCode);
-
-            // everything was fine; lets exit with 0
-            // which is good in this case
-            if(nightwatchExitCode === 0){
-              process.exit();
-            }
-
-            // if(process.env.VELOCITY_CI){
-            //  process.exit(frameworkExitCode);
-            // }
+          if(nightwatchExitCode === 0){
+            console.log('Finished!  Nightwatch ran all the tests!');
+              process.exit(nightwatchExitCode);
           }
-          if(nightwatchExitCode !== 1){
-            console.log('Uh oh!  Something went awry.  Nightwatch exited with a code of ' + code);
-            // if(process.env.VELOCITY_CI){
-              process.exit(22);
-            // }
+          if(nightwatchExitCode !== 0){
+            console.log('Uh oh!  Something went awry.  Nightwatch exited with a code of ' + nightwatchExitCode);
+              process.exit(nightwatchExitCode);
           }
         });
       }));
