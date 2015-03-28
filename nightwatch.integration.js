@@ -130,25 +130,30 @@
           }
         });
 
-
+        var frameworkExitCode = 0;
         nightwatch.stdout.on('data', Meteor.bindEnvironment(function(data){
 
           // data is in hex, lets convert it
           // it also has a line break at the end; lets get rid of that
           console.log(("" + data).slice(0, -1));
 
+          // without this, travis CI won't report that there are failed tests
+          if(("" + data).indexOf("✖") > -1){
+            frameworkExitCode = 1;
+          }
+
         }));
-        nightwatch.on('close', function(code){
-          if(code === 1){
+        nightwatch.on('close', function(nightwatchExitCode){
+          if(nightwatchExitCode === 1){
             console.log('Finished!  Nightwatch ran all the tests!');
             // if(process.env.VELOCITY_CI){
-              process.exit();
+              process.exit(frameworkExitCode);
             // }
           }
-          if(code != 1){
+          if(nightwatchExitCode != 1){
             console.log('Uh oh!  Something went awry.  Nightwatch exited with a code of ' + code);
             // if(process.env.VELOCITY_CI){
-              process.exit();
+              process.exit(frameworkExitCode);
             // }
           }
         });
