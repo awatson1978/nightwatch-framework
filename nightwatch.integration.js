@@ -145,24 +145,19 @@
         }));
         nightwatch.on('close', function(nightwatchExitCode){
           if(nightwatchExitCode === 1){
-            console.log('Finished!  Nightwatch ran all the tests!');
+            console.log('Finished!  Nightwatch ran all the tests and exited with ' + nightwatchExitCode);
 
             // everything was fine; lets exit with 0
             // which is good in this case
-            if(exitCode === 0){
+            if(nightwatchExitCode === 0){
               process.exit();
-            }
-
-            // there was an error, we need to abort
-            if(exitCode === 1){
-              process.exit(33);
             }
 
             // if(process.env.VELOCITY_CI){
             //  process.exit(frameworkExitCode);
             // }
           }
-          if(nightwatchExitCode != 1){
+          if(nightwatchExitCode !== 1){
             console.log('Uh oh!  Something went awry.  Nightwatch exited with a code of ' + code);
             // if(process.env.VELOCITY_CI){
               process.exit(22);
